@@ -1,0 +1,26 @@
+{
+  "name": "fundraiser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glen-s-abraham/campaign-contract.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/glen-s-abraham/campaign-contract/issues"
+  },
+  "homepage": "https://github.com/glen-s-abraham/campaign-contract#readme",
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "ganache": "^7.9.2",
+    "mocha": "^10.4.0",
+    "solc": "^0.4.17",
+    "web3": "^4.9.0"
+  }
+}
