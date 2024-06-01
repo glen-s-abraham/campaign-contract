@@ -47,7 +47,7 @@ contract Campaign {
         approversCount++;
     }
 
-    function createRequst(string description,uint value,address recipient) public restricted{
+    function createRequest(string description,uint value,address recipient) public restricted{
         Request memory request = Request({
             description:description,
             value:value,
