@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/glen-s-abraham/campaign-contract#readme",
   "dependencies": {
+    "@truffle/hdwallet-provider": "^2.1.15",
+    "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",
     "ganache": "^7.9.2",
     "mocha": "^10.4.0",
