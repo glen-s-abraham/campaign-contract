@@ -4,19 +4,24 @@ dotenv.config();
 
 
 
-let web3;
+// let web3;
 
-if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
-    // We are in the browser and metamask is running.
-    window.ethereum.request({ method: "eth_requestAccounts" });
-    web3 = new Web3(window.ethereum);
-} else {
-    console.log(process.env)
-    // We are on the server *OR* the user is not running metamask
-    const provider = new Web3.providers.HttpProvider(
-        "https://sepolia.infura.io/v3/17e26f2e35554486b14d5416b489194b"
-    );
-    web3 = new Web3(provider);
-}
+// if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
+//     // We are in the browser and metamask is running.
+//     window.ethereum.request({ method: "eth_requestAccounts" });
+//     web3 = new Web3(window.ethereum);
+//     console.log("metamask")
+// } else {
+//     // We are on the server *OR* the user is not running metamask
+//     const provider = new Web3.providers.HttpProvider(
+//         "http://192.168.1.69:8545"
+//     );
+//     web3 = new Web3(provider);
+// }
+
+const provider = new Web3.providers.HttpProvider(
+    "http://192.168.1.69:8545"
+);
+const web3 = new Web3(provider);
 
 export default web3;
