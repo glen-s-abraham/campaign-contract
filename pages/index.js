@@ -4,6 +4,8 @@ import factory from '../ethereum/factory';
 import { Card, Button } from 'semantic-ui-react';
 import web3 from '../ethereum/web3';
 import Layout from '../components/Layout';
+import { Link } from '../routes';
+
 
 
 
@@ -25,7 +27,7 @@ export default function Show() {
   const renderCampaigns = () => {
     const items = campaigns.map(campaign => ({
       header: campaign,
-      description: <a>View Campaign</a>,
+      description: (<Link route={`/campaigns/${campaign}`}><a>View Campaign</a></Link>),
       fluid: true
     }));
 
@@ -36,12 +38,15 @@ export default function Show() {
     <Layout>
       <div>
         <h3>Open Campaigns</h3>
-        <Button
-          floated='right'
-          content="Create Campaign"
-          icon="add circle"
-          primary
-        />
+        <Link route="/campaigns/new">
+          <Button
+            floated='right'
+            content="Create Campaign"
+            icon="add circle"
+            primary
+          />
+        </Link>
+
         {campaigns.length > 0 ? renderCampaigns() : null}
       </div>
     </Layout >
