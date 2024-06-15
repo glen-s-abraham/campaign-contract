@@ -3,17 +3,17 @@ import { useRouter } from 'next/router';
 import web3 from '../../ethereum/web3';
 import Layout from '../../components/Layout';
 import getCampaign from '../../ethereum/campaign';
-import { Card } from 'semantic-ui-react';
+import { Card, Grid } from 'semantic-ui-react';
+import ContributeForm from '../../components/ContributeForm';
 
-export default function Show() {
-
+export default function Show({ initialAddress }) {
   const router = useRouter();
-  const { address } = router.query;
-  const [campaignSummary, setCampaignSummary] = useState()
+  const [campaignSummary, setCampaignSummary] = useState(null);
+  const [campaignAddress, setCampaignAddress] = useState(initialAddress);
 
   useEffect(() => {
-    const fetchCampaignSummary = async () => {
-      if (address) {
+    const fetchCampaignSummary = async (address) => {
+      try {
         const accounts = await web3.eth.getAccounts();
         const campaign = getCampaign(address);
         const summary = await campaign.methods.getSummary().call();
@@ -23,19 +23,22 @@ export default function Show() {
           requestsCount: summary[2],
           approversCount: summary[3],
           manager: summary[4],
-        }
-        console.log(data)
-        setCampaignSummary(data)
+        };
+        console.log('Campaign Summary:', data);
+        setCampaignSummary(data);
+      } catch (error) {
+        console.error('Error fetching campaign summary:', error);
       }
-
     };
 
-
-    fetchCampaignSummary();
-
-  }, []);
+    if (campaignAddress) {
+      fetchCampaignSummary(campaignAddress);
+    }
+  }, [campaignAddress]);
 
   const renderCards = () => {
+    if (!campaignSummary) return null;
+
     const {
       minimumContribution,
       balance,
@@ -47,45 +50,59 @@ export default function Show() {
       {
         header: manager,
         meta: 'Address of Manager',
-        description: 'The manager created this campaign and create requests to withdraw money',
-        style: { overflowWrap: 'break-word' }
+        description: 'The manager created this campaign and can create requests to withdraw money',
+        style: { overflowWrap: 'break-word' },
       },
       {
         header: minimumContribution,
         meta: 'Minimum Contribution (wei)',
-        description: 'Minimum Contribution required to become the approver',
-        style: { overflowWrap: 'break-word' }
+        description: 'Minimum contribution required to become an approver',
+        style: { overflowWrap: 'break-word' },
       },
       {
         header: requestsCount,
         meta: 'Number of Requests',
-        description: 'A Request Tries to withdraw moeny from the contract and must be approved by approvers',
-        style: { overflowWrap: 'break-word' }
+        description: 'A request tries to withdraw money from the contract and must be approved by approvers',
+        style: { overflowWrap: 'break-word' },
       },
       {
         header: approversCount,
-        meta: 'Number of approvers',
-        description: 'Number of people who has contrinuted to the campaign',
-        style: { overflowWrap: 'break-word' }
+        meta: 'Number of Approvers',
+        description: 'Number of people who have contributed to the campaign',
+        style: { overflowWrap: 'break-word' },
       },
       {
         header: web3.utils.fromWei(balance, 'ether'),
         meta: 'Campaign Balance (ether)',
         description: 'Balance money the campaign has left to spend',
-        style: { overflowWrap: 'break-word' }
-      }
-
+        style: { overflowWrap: 'break-word' },
+      },
     ];
 
-
-    return <Card.Group items={items} />
-
-  }
+    return <Card.Group items={items} />;
+  };
 
   return (
     <Layout>
       <h3>Show Campaign</h3>
-      {campaignSummary ? renderCards() : ''}
+      <Grid>
+        <Grid.Column width={10}>
+          {campaignSummary ? renderCards() : 'Loading...'}
+        </Grid.Column>
+        <Grid.Column width={6}>
+          <ContributeForm address={campaignAddress} />
+        </Grid.Column>
+      </Grid>
     </Layout>
   );
+}
+
+// Fetch the query parameters on the server side
+export async function getServerSideProps(context) {
+  const { address } = context.query;
+  return {
+    props: {
+      initialAddress: address || null,
+    },
+  };
 }
