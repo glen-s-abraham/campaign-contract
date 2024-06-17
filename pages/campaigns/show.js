@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 import web3 from '../../ethereum/web3';
 import Layout from '../../components/Layout';
 import getCampaign from '../../ethereum/campaign';
-import { Card, Grid } from 'semantic-ui-react';
+import { Button, Card, Grid } from 'semantic-ui-react';
 import ContributeForm from '../../components/ContributeForm';
+import { Link } from '../../routes';
 
 export default function Show({ initialAddress }) {
   const router = useRouter();
@@ -86,12 +87,21 @@ export default function Show({ initialAddress }) {
     <Layout>
       <h3>Show Campaign</h3>
       <Grid>
-        <Grid.Column width={10}>
-          {campaignSummary ? renderCards() : 'Loading...'}
-        </Grid.Column>
-        <Grid.Column width={6}>
-          <ContributeForm address={campaignAddress} />
-        </Grid.Column>
+        <Grid.Row>
+          <Grid.Column width={10}>
+            {campaignSummary ? renderCards() : 'Loading...'}
+            <Grid.Row>
+              <Grid.Column>
+                <Link route={`/campaigns/${campaignAddress}/requests`}>
+                  <a><Button primary>View Requests</Button></a>
+                </Link>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid.Column>
+          <Grid.Column width={6}>
+            <ContributeForm address={campaignAddress} />
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     </Layout>
   );
