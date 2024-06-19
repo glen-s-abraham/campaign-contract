@@ -6,6 +6,18 @@ import getCampaign from '../../../ethereum/campaign';
 import web3 from '../../../ethereum/web3';
 
 export default function requestIndex({ initialAddress, requests, requestCount, approversCount }) {
+    const handleApprove = async (idx) => {
+        const account = (await web3.eth.getAccounts())[0]
+        const campaign = getCampaign(initialAddress);
+        await campaign.methods.approveRequest(idx).send({ from: account, gas: '1000000' });
+    }
+
+    const handleFinalize = async (idx) => {
+        const account = (await web3.eth.getAccounts())[0]
+        const campaign = getCampaign(initialAddress);
+        await campaign.methods.finalizeReuqest(idx).send({ from: account, gas: '1000000' });
+    }
+
     return (
         <Layout>
             <h3>
@@ -36,8 +48,8 @@ export default function requestIndex({ initialAddress, requests, requestCount, a
                             <TableCell>{web3.utils.fromWei(request.value, 'ether')}</TableCell>
                             <TableCell>{request.recipient}</TableCell>
                             <TableCell>{request.approvalsCount}/{approversCount}</TableCell>
-                            <TableCell><Button>Approve</Button></TableCell>
-                            <TableCell><Button>Finalize</Button></TableCell>
+                            <TableCell><Button color='green' basic onClick={() => handleApprove(idx)}>Approve</Button></TableCell>
+                            <TableCell><Button color='green' basic onClick={() => handleFinalize(idx)}>Finalize</Button></TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
